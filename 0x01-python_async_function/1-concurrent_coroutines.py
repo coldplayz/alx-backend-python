@@ -10,13 +10,9 @@ async def wait_n(n: int, max_delay: int = 10):
     ''' Spawns @wait_random @n times.
     '''
     # print(*[7 for _ in range(n)])
-    return await asyncio.gather(*[wait_random(max_delay) for _ in range(n)])
+    # return await asyncio.gather(*[wait_random(max_delay) for _ in range(n)])
 
-    '''
-    durations = []
-    for _ in range(n):
-        duration = await asyncio.gather(wait_random(max_delay))
-        durations.extend(duration)
+    # tasks = [asyncio.create_task(wait_random(max_delay)) for _ in range(n)]
+    tasks = [wait_random(max_delay) for _ in range(n)]  # above also works
 
-    return durations
-    '''
+    return [await task for task in asyncio.as_completed(tasks)]
