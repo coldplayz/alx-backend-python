@@ -43,3 +43,28 @@ class TestGithubOrgClient(TestCase):
             res = gitClient._public_repos_url
             # test
             self.assertEqual(res, "https://greenbel.tech")
+
+    @mock.patch('client.get_json', autospec=True)
+    def test_public_repos(self, mock_get_json):
+        """Test the client.GithubOrgClient.public_repos method.
+        """
+        mock_get_json.return_value = [
+                {'name': 'repo1'},
+                {'name': 'repo2'},
+                {'name': 'repo3'},
+                {'name': 'repo4'},
+                {'name': 'repo5'},
+                ]
+        with mock.patch(
+                'client.GithubOrgClient._public_repos_url',
+                new_callable=mock.PropertyMock,
+                ) as mock_pru:
+            mock_pru.return_value = 'https://greenbel.tech'
+            # create class instance
+            gitClient = GithubOrgClient('abc')
+            res = gitClient.public_repos()
+            # test
+            expected = ['repo1', 'repo2', 'repo3', 'repo4', 'repo5']
+            self.assertEqual(res, expected)
+            mock_get_json.assert_called_once()
+            mock_pru.assert_called_once()
