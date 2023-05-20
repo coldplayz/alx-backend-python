@@ -14,7 +14,7 @@ INPUTS: List[Tuple] = [
 
 
 class TestAccessNestedMap(TestCase):
-    """Implementation class for testing access_nested_map function.
+    """Implementation class for testing utils.access_nested_map function.
     """
     @parameterized.expand(INPUTS)
     def test_access_nested_map(
@@ -32,6 +32,10 @@ class TestAccessNestedMap(TestCase):
         """
         self.assertRaises(KeyError, access_nested_map, nested_map, path)
 
+
+class TestGetJson(TestCase):
+    """Implementation class for testing utils.get_json function.
+    """
     @parameterized.expand([
         ("http://example.com", {"payload": True}),
         ("http://holberton.io", {"payload": False}),
