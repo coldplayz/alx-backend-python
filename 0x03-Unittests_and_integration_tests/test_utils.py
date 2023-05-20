@@ -3,7 +3,7 @@
 """
 from unittest import TestCase, mock
 from parameterized import parameterized
-from utils import access_nested_map, get_json, requests
+from utils import access_nested_map, get_json, requests, memoize
 from typing import Mapping, Dict, List, Tuple, Sequence, Any, Callable
 
 INPUTS: List[Tuple] = [
@@ -60,3 +60,38 @@ class TestGetJson(TestCase):
         # test usage
         mock_requests.get.assert_called_once_with(test_url)
         self.assertEqual(payload, test_payload)
+
+
+class TestMemoize(TestCase):
+    """Implementation class for testing utils.memoize decorator.
+    """
+    def test_memoize(self):
+        """Test the memoize decorator function.
+
+        memoize decorates methods, converting them into getter properties.
+        """
+        # create test class
+        class TestClass:
+            def a_method(self):
+                return 42
+
+            @memoize
+            def a_property(self):
+                return self.a_method()
+
+        # mock a_method with context manager
+        with mock.patch.object(
+                TestClass,
+                'a_method',
+                ) as mock_a_method:
+            # create an instance of the test class
+            obj = TestClass()
+            # set mocked method's return value
+            mock_a_method.return_value = 42
+            # fetch the property twice; but a_method should be called once
+            res1 = obj.a_property
+            res2 = obj.a_property
+            # test
+            self.assertEqual(res1, 42)
+            self.assertEqual(res2, 42)
+            mock_a_method.assert_called_once()
