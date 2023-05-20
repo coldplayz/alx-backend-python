@@ -18,6 +18,5 @@ class TestAccessNestedMap(TestCase):
     """
     @parameterized.expand(INPUTS)
     def test_return(self, nested_map: Mapping, path: Sequence, expected: Any) -> None:
-        """Test the function's return.
-        """
+        """Test the function's return."""
         self.assertEqual(access_nested_map(nested_map, path), expected)
