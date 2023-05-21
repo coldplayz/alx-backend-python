@@ -114,6 +114,7 @@ class TestIntegrationGithubOrgClient(TestCase):
         """
         cls.get_patcher.stop()
 
+    '''
     def test_public_repos_integration(self):
         """Implement the integration test.
         """
@@ -121,3 +122,25 @@ class TestIntegrationGithubOrgClient(TestCase):
         gitClient = GithubOrgClient('abc')
         res = gitClient.public_repos()
         self.assertEqual(res, self.expected_repos)
+    '''
+
+    def test_public_repos(self):
+        """Implement the integration test.
+        """
+        # test
+        gitClient = GithubOrgClient('abc')
+        res = gitClient.public_repos()
+        # print('all######', res)
+        self.assertEqual(res, self.expected_repos)
+
+    def test_public_repos_with_license(self):
+        """Implement the integration test, based on a license.
+        """
+        # re-setup class
+        self.__class__.tearDownClass()
+        self.__class__.setUpClass()
+        # test
+        gitClient = GithubOrgClient('abc')
+        res = gitClient.public_repos(license="apache-2.0")
+        # print('apache2######', res)
+        self.assertEqual(res, self.apache2_repos)
