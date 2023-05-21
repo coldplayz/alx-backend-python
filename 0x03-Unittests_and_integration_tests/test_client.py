@@ -66,5 +66,5 @@ class TestGithubOrgClient(TestCase):
             # test
             expected = ['repo1', 'repo2', 'repo3', 'repo4', 'repo5']
             self.assertEqual(res, expected)
-            mock_get_json.assert_called_once()
+            mock_get_json.assert_called_once_with("https://greenbel.tech")
             mock_pru.assert_called_once()
