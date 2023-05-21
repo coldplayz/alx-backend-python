@@ -107,6 +107,8 @@ class TestIntegrationGithubOrgClient(TestCase):
         # attach mocked requests.get as class attribute
         # can be looked up by any instance [of TestIntegrationGithubOrgClient]
         cls.mock_get = mock_get
+        # create instance for all class tests; results are cached
+        cls.testClient = GithubOrgClient('abc')
 
     @classmethod
     def tearDownClass(cls):
@@ -128,8 +130,8 @@ class TestIntegrationGithubOrgClient(TestCase):
         """Implement the integration test.
         """
         # test
-        gitClient = GithubOrgClient('abc')
-        res = gitClient.public_repos()
+        # gitClient = GithubOrgClient('abc')
+        res = self.testClient.public_repos()
         # print('all######', res)
         self.assertEqual(res, self.expected_repos)
 
@@ -137,10 +139,10 @@ class TestIntegrationGithubOrgClient(TestCase):
         """Implement the integration test, based on a license.
         """
         # re-setup class
-        self.__class__.tearDownClass()
-        self.__class__.setUpClass()
+        # self.__class__.tearDownClass()
+        # self.__class__.setUpClass()
         # test
-        gitClient = GithubOrgClient('abc')
-        res = gitClient.public_repos(license="apache-2.0")
+        # gitClient = GithubOrgClient('abc')
+        res = self.testClient.public_repos(license="apache-2.0")
         # print('apache2######', res)
         self.assertEqual(res, self.apache2_repos)
