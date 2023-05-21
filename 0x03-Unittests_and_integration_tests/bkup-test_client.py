@@ -93,19 +93,16 @@ class TestIntegrationGithubOrgClient(TestCase):
         """Setup called once per class, and for each test method therein.
         """
         # create patcher for requests.get()
-        cls.get_patcher = mock.patch('utils.requests.get', autospec=True)
+        cls.get_patcher = mock.patch('utils.requests', autospec=True)
         # retrieve the mocked method
         mock_get = cls.get_patcher.start()  # attach to instance
-        # prepare response mock as return of requests.get
-        response_mock = mock.Mock()
-        response_mock.json.side_effect = [
-                cls.org_payload,
-                cls.repos_payload,
-                ]
-        # attach response mock to return of get (as the response object)
-        mock_get.return_value = response_mock
-        # attach mocked requests.get as class attribute
-        # can be looked up by any instance [of TestIntegrationGithubOrgClient]
+        # create instance
+        # prepare json mock
+        # json = mock.Mock()
+        # json.side_effect = [cls.org_payload, cls.repos_payload]
+        # attach json mock to return of get (as the response object)
+        # mock_get.return_value = json
+        # attach to each TestCase instance for each test method
         cls.mock_get = mock_get
 
     @classmethod
@@ -117,6 +114,16 @@ class TestIntegrationGithubOrgClient(TestCase):
     def test_public_repos_integration(self):
         """Implement the integration test.
         """
+        # prepare response mock as return of requests.get
+        response_mock = mock.Mock()
+        # self. should eventually lookup cls.
+        response_mock.json.side_effect = [
+                self.org_payload,
+                self.repos_payload,
+                ]
+        # attach response mock to return of get (as the response object)
+        self.mock_get.return_value = response_mock
+
         # test
         gitClient = GithubOrgClient('abc')
         res = gitClient.public_repos()
